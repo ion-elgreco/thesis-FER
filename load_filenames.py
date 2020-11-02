@@ -7,10 +7,10 @@ from os.path import join
 # AFEW 7.0  = AF7
 # filenames = FN
 
-### Aff-wild2 ###
+### Aff-wild2 - VIDEOS ###
 # Directories for labels/annotations for each set
-AW2_dir_train_labels = (r"D:\Aff-Wild2 Dataset\Aff-wild2\Videos\annotations\EXPR_Set\Training_Set")
-AW2_dir_val_labels = (r"D:\Aff-Wild2 Dataset\Aff-wild2\Videos\annotations\EXPR_Set\Validation_Set")
+AW2_dir_train_labels = r"D:\Aff-Wild2 Dataset\Aff-wild2\Videos\annotations\EXPR_Set\Training_Set"
+AW2_dir_val_labels = r"D:\Aff-Wild2 Dataset\Aff-wild2\Videos\annotations\EXPR_Set\Validation_Set"
 
 # Directories for videos
 AW2_dir_allvideos = r"D:\Aff-Wild2 Dataset\Aff-wild2\Videos\all_videos"
@@ -25,6 +25,10 @@ AW2_val_FN_split = [splitext(file) for file in AW2_val_FN]
 AW2_videos_FN = listdir(AW2_dir_allvideos)
 AW2_videos_FN_split = [splitext(file) for file in AW2_videos_FN]
 
+
+### Aff-wild2 - Pre-Processed Images ###
+AW2_cropped_aligned_dir = r"D:\Aff-Wild2 Dataset\Aff-wild2\Images\cropped_aligned"
+AW2_cropped_aligned_folders = listdir(AW2_cropped_aligned_dir)
 
 ### AFEW 7.0 ###
 # Directories for labels/annotations for each set
