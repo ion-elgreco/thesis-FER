@@ -1,11 +1,15 @@
 import scipy.sparse
 import numpy as np
 
-train_features = scipy.sparse.load_npz("data/train_features.npz") #CSR Matrix
-val_features = scipy.sparse.load_npz("data/val_features.npz") #CSR Matrix
-train_labels = np.load("data/train_labels.npy") #Numpy array
-val_labels = np.load("data/val_labels.npy") #Numpy array
-test_features = scipy.sparse.load_npz("data/test_features.npz") #CSR Matrix
+# load Aff-Wild2 Features
+train_features_AW2 = scipy.sparse.load_npz("data/train_features.npz") #CSR Matrix
+val_features_AW2 = scipy.sparse.load_npz("data/val_features.npz") #CSR Matrix
+train_labels_AW2 = np.load("data/train_labels.npy") #Numpy array
+val_labels_AW2 = np.load("data/val_labels.npy") #Numpy array
+test_features_AW2 = scipy.sparse.load_npz("data/test_features.npz") #CSR Matrix
+
+# Load AFEW7.0 features
+
 
 # Function which reshapes the features to [sequences, sequence_length, features], 
 # and labels to [sequences, sequence_length, labels]
