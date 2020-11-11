@@ -2,11 +2,11 @@ import scipy.sparse
 import numpy as np
 
 # load Aff-Wild2 Features
-train_features_AW2 = scipy.sparse.load_npz("data/train_features.npz") #CSR Matrix
-val_features_AW2 = scipy.sparse.load_npz("data/val_features.npz") #CSR Matrix
-train_labels_AW2 = np.load("data/train_labels.npy") #Numpy array
-val_labels_AW2 = np.load("data/val_labels.npy") #Numpy array
-test_features_AW2 = scipy.sparse.load_npz("data/test_features.npz") #CSR Matrix
+train_features_AW2 = scipy.sparse.load_npz("data/features/train_features_AW2.npz") #CSR Matrix
+val_features_AW2 = scipy.sparse.load_npz("data/features/val_features_AW2.npz") #CSR Matrix
+train_labels_AW2 = np.load("data/labels/train_labels_AW2.npy") #Numpy array
+val_labels_AW2 = np.load("data/labels/val_labels_AW2.npy") #Numpy array
+test_features_AW2 = scipy.sparse.load_npz("data/features/test_features_AW2.npz") #CSR Matrix
 
 # Load AFEW7.0 features
 
