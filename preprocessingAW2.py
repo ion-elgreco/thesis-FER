@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 ### Load/import packages
 import json
 import time
@@ -22,10 +16,6 @@ from load_filenames import (
     AW2_val_FN_split,
 )
 
-
-# In[2]:
-
-
 # Steps in this script
 # 1. Apply illumination normalization (histogram equalization)
 # 2. Store the frames (images) in a named folder same name as video. 
@@ -33,9 +23,6 @@ from load_filenames import (
 # 4. Put each corresponding frame in the correct class folder for training and validiation set.
 #    This is required for keras to read the image data from the directory in batches and assign the classes
 #    inferred from the directory structure.
-
-
-# In[15]:
 
 
 # Pre-processing function
@@ -182,10 +169,6 @@ def pre_processing(RGB=True):
             shutil.copy(join(val_dir, join(folder, file)), new_dir)
             rename(join(new_dir, file), join(new_dir, folder + "_" + file))
     print('Finished moving files')
-
-
-# In[ ]:
-
 
 pre_processing()
 
