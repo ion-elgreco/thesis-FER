@@ -1,12 +1,8 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 ### Load/import packages
 import json
 import time
 import shutil
 import numpy as np
-import matplotlib.pyplot as plt
 
 from os import listdir, mkdir, rename
 from os.path import join, splitext
