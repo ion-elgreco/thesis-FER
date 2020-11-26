@@ -14,7 +14,6 @@ from skimage.transform import resize
 from mtcnn.mtcnn import MTCNN
 
 
-
 # ## Directories
 # ### Aff-Wild2
 from load_filenames import (AF7_dir_videos, 
@@ -78,5 +77,7 @@ for label in AF7_dir_labels:
             # If the face is not found, continue in the loop
             if face == []:
                 continue
+            # Apply illumination normalization
+            face = exposure.equalize_adapthist(face)
             io.imsave(join(join(frame_dir, label), f'{fn}_{frame_n:05n}'+'.jpg'), (face*255).astype('uint8'), check_contrast=False)
         
