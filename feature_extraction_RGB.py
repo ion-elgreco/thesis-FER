@@ -1,11 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# ## Load/import packages
-
-# In[6]:
-
-
+### Load/import packages
 import time
 import scipy.sparse
 import numpy as np
@@ -22,11 +15,7 @@ for device in tf.config.experimental.list_physical_devices("GPU"):
     tf.config.experimental.set_memory_growth(device, True)
 
 
-# ## Functions
-
-# In[2]:
-
-
+### Functions
 def feature_extractor(model, data_dir, batch_size=128, test=False):
 
     # Define ImageDataGenerator with precoessing function set to preprocess_input for vgg19 model
@@ -103,28 +92,14 @@ def feature_extractor(model, data_dir, batch_size=128, test=False):
         return features_arr, filenames
 
 
-# # Initiate Base CNN
+## Initiate Base CNN
 # For the feature extraction the pre-trained **VGG19** network will be used with the imagenet weights. Input shape is set to 112,112,3. The top is not included because we only want to extract features, so we remove the classification layers.
-
-# In[7]:
-
-
 base_VGG19 = tf.keras.applications.VGG19(
     include_top=False, weights="imagenet", input_shape=(112, 112, 3)
 )
-
-
-# In[8]:
-
-
 base_VGG19.summary()
 
-
-# # Initiate Feature Extraction model
-
-# In[9]:
-
-
+## Initiate Feature Extraction model
 # We add a flatten layer to the base VGG19 layer to just get a simple 1-Dimensional feature vector as output for our RNN/LSTM as input
 def build_FE_model():
     model = Sequential()
@@ -135,10 +110,6 @@ def build_FE_model():
 
 FE_model = build_FE_model()
 FE_model.summary()
-
-
-# In[11]:
-
 
 # Plot model
 tf.keras.utils.plot_model(
@@ -152,40 +123,19 @@ tf.keras.utils.plot_model(
     dpi=96,
 )
 
-
-# In[15]:
-
-
-# Remove block 5 from FE model 
-# (Source: Ravi, A. (2018). Pre-Trained Convolutional Neural Network Features for Facial Expression Recognition. ArXiv:1812.06387 [Cs]. 
-#  Retrieved from http://arxiv.org/abs/1812.06387)
-
-
-# # Extract all Features with FE model1 - AFF-Wild2
-
-# In[7]:
-
-
+## Extract all Features with FE model1 - AFF-Wild2
 AW2_train_dir = r"D:\Aff-Wild2 Dataset\Aff-wild2\Sets_per_class_RGB\train"
 AW2_val_dir = r"D:\Aff-Wild2 Dataset\Aff-wild2\Sets_per_class_RGB\val"
 
 # In this directory each video folder contains all its frames
 AW2_test_dir = r"D:\Aff-Wild2 Dataset\Aff-wild2\Sets_RGB\test"
 
-
-# ## Extract Training set Features
-
-# In[8]:
-
+### Extract Training set Features
 
 # Extract training features and labels
 train_features, train_labels, train_filenames = feature_extractor(
     FE_model, AW2_train_dir
 )
-
-
-# In[9]:
-
 
 # Save features as NPZ Numpy’s compressed array format and labels as numpy
 scipy.sparse.save_npz("data/features/train_features_RGB_AW2.npz", train_features)
@@ -193,18 +143,9 @@ np.save("data/labels/train_labels_RGB_AW2.npy", train_labels)
 with open("data/filenames/train_filenames_RGB_AW2.txt", "w") as fp:
     fp.write("\n".join(train_filenames))
 
-
-# ## Extract Validation set Features
-
-# In[10]:
-
-
+### Extract Validation set Features
 # Extract validation features and labels
 val_features, val_labels, val_filenames = feature_extractor(FE_model, AW2_val_dir)
-
-
-# In[11]:
-
 
 # Save features as NPZ Numpy’s compressed array format and labels as numpy
 scipy.sparse.save_npz("data/features/val_features_RGB_AW2.npz", val_features)
@@ -212,42 +153,19 @@ np.save("data/labels/val_labels_RGB_AW2.npy", val_labels)
 with open("data/filenames/val_filenames_RGB_AW2.txt", "w") as fp:
     fp.write("\n".join(val_filenames))
 
-
-# ## Extract Test set Features
-# 
-
-# In[12]:
-
-
+### Extract Test set Features
 test_features, test_filenames = feature_extractor(FE_model, AW2_test_dir, test=True)
-
-
-# In[13]:
-
 
 # Save features as NPZ Numpy’s compressed array format
 scipy.sparse.save_npz("data/features/test_features_RGB_AW2.npz", test_features)
 with open("data/filenames/test_filenames_RGB_AW2.txt", "w") as fp:
     fp.write("\n".join(test_filenames))
 
-
-# # Extract all Features with FE model1 - AFEW 7.0
-
-# In[6]:
-
-
+## Extract all Features with FE model1 - AFEW 7.0
 AF7_dir = r"D:\AFEW 7.0 Dataset\Val+train_faces"
-
-
-# In[7]:
-
 
 # Extract train+val features and labels
 AF7_features, AF7_labels, AF7_filenames = feature_extractor(FE_model, AF7_dir)
-
-
-# In[8]:
-
 
 # Save features as NPZ Numpy’s compressed array format and labels as numpy
 scipy.sparse.save_npz("data/features/features_RGB_AF7.npz", AF7_features)

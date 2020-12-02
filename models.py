@@ -1,11 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# ## Load/import packages
-
-# In[ ]:
-
-
+### Load/import packages
 import json
 import scipy
 import numpy as np
@@ -36,10 +29,6 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 for device in tf.config.experimental.list_physical_devices("GPU"):
     tf.config.experimental.set_memory_growth(device, True)
 
-
-# In[ ]:
-
-
 # load Aff-Wild2 Features
 train_features_AW2 = scipy.sparse.load_npz("data/features/train_features_RGB_AW2.npz") #CSR Matrix
 val_features_AW2 = scipy.sparse.load_npz("data/features/val_features_RGB_AW2.npz") #CSR Matrix
@@ -48,20 +37,12 @@ val_labels_AW2 = np.load("data/labels/val_labels_RGB_AW2.npy") #Numpy array
 
 # test_features_AW2 = scipy.sparse.load_npz("data/features/test_features_RGB_AW2.npz") #CSR Matrix
 
-
-# In[ ]:
-
-
 # Load AFEW7.0 features
 test_features_AF7 = scipy.sparse.load_npz("data/features/features_RGB_AF7.npz") #CSR Matrix
 test_labels_AF7 = np.load("data/labels/labels_RGB_AF7.npy") #Numpy array
 
 
-# ## Functions
-
-# In[ ]:
-
-
+### Functions
 # Function which reshapes the features to [sequences, sequence_length, features], 
 # and labels to [sequences, sequence_length, labels]
 def labels_reshaper(labels, sequence_length):
@@ -93,11 +74,7 @@ def arr_replacevalue(array, d_class_weights, start=0):
     return arr_replacevalue(array, d_class_weights, start + 1)
 
 
-# # Prepare data
-
-# In[ ]:
-
-
+## Prepare data
 # Reshape data to specified sequence length
 length = 60
 
@@ -113,10 +90,6 @@ del train_labels_AW2  # wipe out of memory to free up space
 y_val = labels_reshaper(val_labels_AW2, length)
 del val_labels_AW2  # wipe out of memory to free up space
 
-
-# In[ ]:
-
-
 X_test_AF7 = features_reshaper(test_features_AF7, length)
 del test_features_AF7  # wipe out of memory to free up space
 
@@ -124,15 +97,8 @@ y_test_AF7 = labels_reshaper(test_labels_AF7, length)
 del test_labels_AF7  # wipe out of memory to free up space
 
 
-# In[ ]:
-
-
 # Split the validation set into validation and test
 X_val, X_test, y_val, y_test = train_test_split(X_val, y_val, test_size = 0.5, random_state = 1234, shuffle=True)
-
-
-# In[ ]:
-
 
 def comp_sampleweights(labels):
     # Convert one-hot encoded labels back to label integers
@@ -151,14 +117,11 @@ def comp_sampleweights(labels):
 train_samples_weights = comp_sampleweights(y_train)
 
 
-# # Build FW-RNN model
+## Build FW-RNN model
 # -  Build custom FW_RNN cell and wrap it in RNN layer (https://www.tensorflow.org/api_docs/python/tf/keras/layers/RNN), like this: RNN(FW_RNN)
 #     -  "The cell abstraction, together with the generic keras.layers.RNN class, make it very easy to implement custom RNN architectures for your research."
 # 
 # Created by using this guide: https://www.tensorflow.org/guide/keras/custom_layers_and_models
-
-# In[ ]:
-
 
 # Build model with model subclassing and sequential API
 def build_FWRNN(batch, units, activation_function):
@@ -323,10 +286,6 @@ def build_FWRNN(batch, units, activation_function):
     )
     return model
 
-
-# In[ ]:
-
-
 # Build baseline model (RNN or LSTM) with sequential API
 def build_base(model_name, units):
     model = Sequential(name=model_name)
@@ -344,10 +303,6 @@ def build_base(model_name, units):
     )
     return model
 
-
-# In[ ]:
-
-
 # Set early stopping
 es = tf.keras.callbacks.EarlyStopping(
     monitor="val_loss",
@@ -357,10 +312,6 @@ es = tf.keras.callbacks.EarlyStopping(
     mode="auto",
     restore_best_weights=True,
 )
-
-
-# In[ ]:
-
 
 # Define batch size for models
 batchsize = 32
@@ -375,7 +326,6 @@ y_train = y_train[:train_div]
 
 X_val = X_val[:val_div]
 y_val = y_val[:val_div]
-
 
 for num_units in [5, 20, 50, 100]:
     for model in ["RNN", "LSTM", "FWRNN"]:
@@ -429,11 +379,7 @@ for num_units in [5, 20, 50, 100]:
         )
 
 
-# ## Evaluate on test sets
-
-# In[ ]:
-
-
+### Evaluate on test sets
 # Disivible length of test_AW2 and test_AF7 features by batchsize, necessary because fwRNN batch size is fixed
 test_div_AW2 = (X_test.shape[0] // batchsize) * batchsize
 test_div_AF7 = (X_test_AF7.shape[0] // batchsize) * batchsize
@@ -444,10 +390,6 @@ y_test = y_test[:test_div_AW2]
 
 X_test_AF7 = X_test_AF7[:test_div_AF7]
 y_test_AF7 = y_test_AF7[:test_div_AF7]
-
-
-# In[ ]:
-
 
 for num_units in [5, 20, 50, 100]:
     for model in ["RNN", "LSTM", "FWRNN"]:

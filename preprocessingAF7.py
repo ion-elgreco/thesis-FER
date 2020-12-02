@@ -3,6 +3,7 @@ import ffmpeg
 import cv2
 import numpy as np
 import tensorflow as tf
+
 # tf.__version__ 1.1.4
 
 from os import mkdir
@@ -10,7 +11,7 @@ from os.path import join, splitext
 from skimage import io, exposure, color
 from skimage.transform import resize
 
-# Import MTCNN for face detection (method 1)
+# Import MTCNN for face detection (requires tf 1.1.4 to run)
 from mtcnn.mtcnn import MTCNN
 
 
