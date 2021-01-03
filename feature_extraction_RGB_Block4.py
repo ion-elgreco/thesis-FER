@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
-
-
 import time
 import scipy.sparse
 import numpy as np
@@ -20,33 +14,21 @@ for device in tf.config.experimental.list_physical_devices("GPU"):
     tf.config.experimental.set_memory_growth(device, True)
 
 
-# # Initiate Base CNN
+## Initiate Base CNN
 # For the feature extraction the pre-trained **VGG19** network will be used with the imagenet weights. Input shape is set to 112,112,3. The top is not included because we only want to extract features, so we remove the classification layers.
 
-# ## Load/import packages
-
-# In[3]:
-
+### Load/import packages
 
 base_VGG19 = tf.keras.applications.VGG19(
     include_top=False, weights="imagenet", input_shape=(112, 112, 3)
 )
 
-
-# In[4]:
-
-
 base_VGG19.summary()
 
-
-# # Initiate Feature Extraction model
-
-# In[5]:
-
-
-# Remove block 5 from FE model 
-# (Source: Ravi, A. (2018). Pre-Trained Convolutional Neural Network Features for Facial Expression Recognition. ArXiv:1812.06387 [Cs]. 
-#  Retrieved from http://arxiv.org/abs/1812.06387)
+## Initiate Feature Extraction model
+    # Remove block 5 from FE model 
+    # (Source: Ravi, A. (2018). Pre-Trained Convolutional Neural Network Features for Facial Expression Recognition. ArXiv:1812.06387 [Cs]. 
+    #  Retrieved from http://arxiv.org/abs/1812.06387)
 
 # We add a flatten layer to the base VGG19 layer to just get a simple 1-Dimensional feature vector as output for our RNN/LSTM as input
 def build_FE_model():
@@ -60,20 +42,13 @@ FE_model = build_FE_model()
 FE_model.summary()
 
 
-# # Extract all Features with FE model1 - AFF-Wild2
-
-# In[6]:
-
-
+## Extract all Features with FE model - AFF-Wild2
+# Define directories
 AW2_train_dir = r"D:\Aff-Wild2 Dataset\Aff-wild2\Sets_per_class_RGB\train"
 AW2_val_dir = r"D:\Aff-Wild2 Dataset\Aff-wild2\Sets_per_class_RGB\val"
 
 # In this directory each video folder contains all its frames
 AW2_test_dir = r"D:\Aff-Wild2 Dataset\Aff-wild2\Sets_RGB\test"
-
-
-# In[7]:
-
 
 def feature_extractor(model):
     # Define index to extract in parts
@@ -82,11 +57,7 @@ def feature_extractor(model):
         return pred, labels
 
 
-# ## Extract Training set Features
-
-# In[25]:
-
-
+### Extract Training set Features
 datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
 generator = datagen.flow_from_directory(
     directory=AW2_train_dir,
@@ -96,10 +67,6 @@ generator = datagen.flow_from_directory(
     batch_size=60,
     shuffle=False,
 )
-
-
-# In[29]:
-
 
 while len(generator) != generator.total_batches_seen:
     print(
@@ -111,11 +78,7 @@ while len(generator) != generator.total_batches_seen:
     np.save(f"D:/block4/train_AW2/labels/labels_part{generator.total_batches_seen}.npy", labels)
 
 
-# ## Extract Validation set Features
-
-# In[11]:
-
-
+### Extract Validation set Features
 datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
 generator = datagen.flow_from_directory(
     directory=AW2_val_dir,
@@ -125,10 +88,6 @@ generator = datagen.flow_from_directory(
     batch_size=60,
     shuffle=False,
 )
-
-
-# In[12]:
-
 
 while len(generator) != generator.total_batches_seen:
     print(
@@ -140,19 +99,9 @@ while len(generator) != generator.total_batches_seen:
     np.save(f"D:/block4/val_AW2/labels/labels_part{generator.total_batches_seen}.npy", labels)
 
 
-# ## Extract Test set Features
-# 
-
-# # Extract all Features with FE model1 - AFEW 7.0
-
-# In[17]:
-
-
+### Extract Test set Features
+## Extract all Features with FE model - AFEW 7.0
 AF7_dir = r"D:\AFEW 7.0 Dataset\Val+train_faces"
-
-
-# In[18]:
-
 
 datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
 generator = datagen.flow_from_directory(
@@ -164,10 +113,6 @@ generator = datagen.flow_from_directory(
     shuffle=False,
 )
 
-
-# In[20]:
-
-
 while len(generator) != generator.total_batches_seen:
     print(
         f"Progress: {round(((generator.total_batches_seen/len(generator))*100),2)}%, batch index: {generator.batch_index}"
@@ -176,4 +121,3 @@ while len(generator) != generator.total_batches_seen:
     
     np.save(f"D:/block4/test_AF7/features/features_part{generator.total_batches_seen}.npy", features)
     np.save(f"D:/block4/test_AF7/labels/labels_part{generator.total_batches_seen}.npy", labels)
-
