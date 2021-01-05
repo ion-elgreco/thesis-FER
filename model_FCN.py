@@ -41,7 +41,7 @@ class_weights = {i : class_weights[i] for i in range(len(class_weights))}
 ## Define and train model
 model = Sequential()
 model.add(layers.InputLayer(input_shape=4608,))
-model.add(layers.Dense(32))
+model.add(layers.Dense(50))
 model.add(layers.Dense(7, activation="softmax", name="Dense_Output"))
 model.compile(optimizer="adam", loss=CategoricalCrossentropy(), metrics=["accuracy"])
 
@@ -50,11 +50,11 @@ model.summary()
 # Fit model to training set and evaluate
 batchsize = 512
 history = model.fit(
-    train_features_AW2,
-    train_labels_AW2,
+    X_train,
+    y_train,
     batch_size=batchsize,
     class_weight=class_weights,
-    validation_data=(val_features_AW2, val_labels_AW2),
+    validation_data=(X_val, y_val),
     epochs=5,
     verbose=1,
     shuffle=True,
